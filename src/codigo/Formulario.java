@@ -5,6 +5,11 @@
  */
 package codigo;
 
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.Statement;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author xp
@@ -14,8 +19,23 @@ public class Formulario extends javax.swing.JFrame {
     /**
      * Creates new form Formulario
      */
+    
+    String cadena_error = "";
+    DefaultTableModel modelo;
+
+    DefaultTableModel tm ;
+    
+   
+    
     public Formulario() {
         initComponents();
+        
+        RellenarTabla1("cancion");
+        
+        RellenarTabla2("cancion");
+        
+        
+        
     }
 
     /**
@@ -27,25 +47,320 @@ public class Formulario extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tabla = new javax.swing.JTable();
+        errores = new javax.swing.JLabel();
+        Album = new javax.swing.JButton();
+        Artista = new javax.swing.JButton();
+        Cancion = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tabla2 = new javax.swing.JTable();
+        Modificar = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
+
+        tabla.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane1.setViewportView(tabla);
+
+        Album.setText("Album");
+        Album.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AlbumActionPerformed(evt);
+            }
+        });
+
+        Artista.setText("Artista");
+        Artista.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ArtistaActionPerformed(evt);
+            }
+        });
+
+        Cancion.setText("Cancion");
+        Cancion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CancionActionPerformed(evt);
+            }
+        });
+
+        tabla2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane2.setViewportView(tabla2);
+
+        Modificar.setText("Escoger fila");
+        Modificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ModificarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1)
+                    .addComponent(errores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(Album, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                        .addComponent(Artista, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29)
+                        .addComponent(Cancion, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(Modificar)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(Album, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Artista, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Cancion, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(44, 44, 44)
+                .addComponent(Modificar)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 110, Short.MAX_VALUE)
+                .addComponent(errores, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void CancionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancionActionPerformed
+        RellenarTabla1(Cancion.getText());
+        
+        RellenarTabla2(Cancion.getText());
+    }//GEN-LAST:event_CancionActionPerformed
+
+    private void AlbumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AlbumActionPerformed
+        RellenarTabla1(Album.getText());
+        
+        RellenarTabla2(Album.getText());
+    }//GEN-LAST:event_AlbumActionPerformed
+
+    private void ArtistaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ArtistaActionPerformed
+        RellenarTabla1(Artista.getText());
+        
+        RellenarTabla2(Artista.getText());    
+    }//GEN-LAST:event_ArtistaActionPerformed
+
+    private void ModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ModificarActionPerformed
+       /*
+   Aquí viene la parte interesante:
+   Lee cada fila seleccionada de la tabla de origen 
+   y agrégalo a la tabla de destino
+ */
+ DefaultTableModel modeloOrigen = (DefaultTableModel) tabla.getModel(),
+                   modeloDestino = (DefaultTableModel) tabla2.getModel();
+ /* Si utilizas otro TableModel, el tipo de estas variables debe ser el mismo 
+    que el TableModel que utilizas.
+  */
+ // Si tienes filas seleccionadas en la tabla de origen:
+ if(tabla.getSelectedRowCount() > 0) {
+     // 1) Obtén los índices de las filas seleccionadas.
+     int[] indices = tabla.getSelectedRows();
+     // 2) Para cada fila, crea un Array para guardar los valores... 
+     for(int i : indices) {
+         Object[] fila = new Object[modeloOrigen.getColumnCount()];
+         // ... y guarda los valores de la fila de origen.
+         for(int j = 0; j < fila.length; j++) {
+             fila[j] = modeloOrigen.getValueAt(i, j);
+         }
+         // 3) Agrega la fila al TableModel de la tabla de destino
+         modeloDestino.addRow(fila);
+     }
+ }
+                
+        
+       
+    }//GEN-LAST:event_ModificarActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        gc.CerrarConexion();
+    }//GEN-LAST:event_formWindowClosing
+
     /**
      * @param args the command line arguments
      */
+    
+    GestorConexion gc = new GestorConexion();
+    
+    public void RellenarTabla1(String nombre){
+        
+        try {
+            gc.conn1.setAutoCommit(false);
+            
+            Statement sta = gc.conn1.createStatement();
+            
+            String query = "SELECT * FROM "+ nombre +"";
+            
+            ResultSet rs = sta.executeQuery(query);           
+            ResultSetMetaData metaDatos = rs.getMetaData();
+            
+            int numColumnas = metaDatos.getColumnCount();
+            
+            modelo = new DefaultTableModel();
+            
+            this.tabla.setModel(modelo);
+            
+            for (int i = 1; i <= numColumnas; i++) {
+                modelo.addColumn(metaDatos.getColumnLabel(i));
+            }
+            
+            while (rs.next()) {                
+                Object[] fila = new Object[numColumnas];
+                
+                for (int i = 0; i < numColumnas; i++) {
+                    fila [i] = rs.getObject(i +1);
+                }
+                modelo.addRow(fila);
+            }
+            cadena_error = "Conectado a spotify";
+            errores.setText(cadena_error);
+            
+            rs.close();
+            
+            sta.close();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            cadena_error = e.toString();
+            errores.setText(cadena_error);
+        }
+    }
+    
+    public void  RellenarTabla2(String nombre){
+        
+        try {
+            gc.conn1.setAutoCommit(false);
+            
+            Statement sta = gc.conn1.createStatement();
+            
+            String query = "SELECT * FROM "+ nombre + " WHERE "+ tabla.getSelectedRow() +"";
+            
+            ResultSet rs = sta.executeQuery(query);           
+            ResultSetMetaData metaDatos = rs.getMetaData();
+            
+            int numColumnas = metaDatos.getColumnCount();
+            int numFilas = 1;
+            
+            modelo = new DefaultTableModel();
+            
+            this.tabla2.setModel(modelo);
+            
+            for (int i = 1; i <= numColumnas; i++) {
+                modelo.addColumn(metaDatos.getColumnLabel(i));
+            }
+            
+            if (rs.absolute(tabla.getSelectedRowCount())) {                
+                Object[] fila = new Object[numColumnas];
+                
+                for (int i = 0; i < numColumnas; i++) {
+                    fila [i] = rs.getObject(i +1);
+                }
+                modelo.addRow(fila);
+            }
+            
+            
+//                            
+//                Object[] fila = new Object[numFilas];
+//                for (int i = 0; i < numColumnas; i++) {
+//                    fila [i] = rs.getObject(i +1);
+//                }
+//                modelo.addRow(fila);
+//            
+//            if(tabla2 == null){
+//                fila [tabla.getSelectedRow()] = rs.getObject(1);
+//            }    
+                
+            
+            cadena_error = "Conectado a spotify";
+            errores.setText(cadena_error);
+            
+            rs.close();
+            
+            sta.close();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            cadena_error = e.toString();
+            errores.setText(cadena_error);
+        }
+    }
+    
+     public void RellenarTabla(String nombre){
+        
+        try {
+            gc.conn1.setAutoCommit(false);
+            
+            Statement sta = gc.conn1.createStatement();
+            
+            String query = "SELECT * FROM "+ nombre +"";
+            
+            ResultSet rs = sta.executeQuery(query);           
+            ResultSetMetaData metaDatos = rs.getMetaData();
+            
+            int numColumnas = metaDatos.getColumnCount();
+            
+            modelo = new DefaultTableModel();
+            
+            this.tabla.setModel(modelo);
+            
+            for (int i = 1; i <= numColumnas; i++) {
+                modelo.addColumn(metaDatos.getColumnLabel(i));
+            }
+            
+            while (rs.next()) {                
+                Object[] fila = new Object[numColumnas];
+                
+                for (int i = 0; i < numColumnas; i++) {
+                    fila [i] = rs.getObject(i +1);
+                }
+                modelo.addRow(fila);
+            }
+            cadena_error = "Conectado a spotify";
+            errores.setText(cadena_error);
+            
+            rs.close();
+            
+            sta.close();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            cadena_error = e.toString();
+            errores.setText(cadena_error);
+        }
+    }
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -79,5 +394,14 @@ public class Formulario extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Album;
+    private javax.swing.JButton Artista;
+    private javax.swing.JButton Cancion;
+    private javax.swing.JButton Modificar;
+    private javax.swing.JLabel errores;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable tabla;
+    private javax.swing.JTable tabla2;
     // End of variables declaration//GEN-END:variables
 }

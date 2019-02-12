@@ -25,10 +25,10 @@ public class GestorConexion {
         
         
         try {
-            String url1 = "jdbc:mysql://localhost:3306/discografica?"
+            String url1 = "jdbc:mysql://localhost:3306/spotify?"
                     + "useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
             String user = "root";
-            String password = "root";
+            String password = "";
             
             conn1 =  DriverManager.getConnection(url1, user, password);
             
@@ -36,7 +36,8 @@ public class GestorConexion {
             
             
             if (conn1 != null) {
-                System.out.println("Conectado a discográfica…");
+                System.out.println("Conectado a spotify…");
+                
             } 
             
         } catch (SQLException ex) {
