@@ -5,8 +5,10 @@
  */
 package codigo;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
 
@@ -30,9 +32,9 @@ public class Formulario extends javax.swing.JFrame {
     public Formulario() {
         initComponents();
         
-        RellenarTabla1("cancion");
+        RellenarTabla1(jComboBox1.getSelectedItem().toString());
         
-        RellenarTabla2("cancion");
+        RellenarTabla2(jComboBox1.getSelectedItem().toString());
         
         
         
@@ -50,12 +52,14 @@ public class Formulario extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tabla = new javax.swing.JTable();
         errores = new javax.swing.JLabel();
-        Album = new javax.swing.JButton();
-        Artista = new javax.swing.JButton();
-        Cancion = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tabla2 = new javax.swing.JTable();
+        EscogerFila = new javax.swing.JButton();
+        Añadir = new javax.swing.JButton();
+        Borrar = new javax.swing.JButton();
         Modificar = new javax.swing.JButton();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -64,6 +68,11 @@ public class Formulario extends javax.swing.JFrame {
             }
         });
 
+        tabla = new javax.swing.JTable(){
+            public boolean isCellEditable(int rowIndex, int colIndex) {
+                return false; //Disallow the editing of any cell
+            }
+        };
         tabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -74,27 +83,6 @@ public class Formulario extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tabla);
 
-        Album.setText("Album");
-        Album.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AlbumActionPerformed(evt);
-            }
-        });
-
-        Artista.setText("Artista");
-        Artista.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ArtistaActionPerformed(evt);
-            }
-        });
-
-        Cancion.setText("Cancion");
-        Cancion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CancionActionPerformed(evt);
-            }
-        });
-
         tabla2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -103,14 +91,48 @@ public class Formulario extends javax.swing.JFrame {
 
             }
         ));
+        tabla2.setCellSelectionEnabled(true);
+        tabla2.setEnabled(false);
         jScrollPane2.setViewportView(tabla2);
 
-        Modificar.setText("Escoger fila");
+        EscogerFila.setText("Escoger fila");
+        EscogerFila.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EscogerFilaActionPerformed(evt);
+            }
+        });
+
+        Añadir.setText("Añadir");
+        Añadir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AñadirActionPerformed(evt);
+            }
+        });
+
+        Borrar.setText("Borrar");
+        Borrar.setEnabled(false);
+        Borrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BorrarActionPerformed(evt);
+            }
+        });
+
+        Modificar.setText("Modificar");
+        Modificar.setEnabled(false);
         Modificar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ModificarActionPerformed(evt);
             }
         });
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "artista", "album", "cancion"}));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("jLabel1");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -119,17 +141,20 @@ public class Formulario extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1)
                     .addComponent(errores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 732, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(Album, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
-                        .addComponent(Artista, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29)
-                        .addComponent(Cancion, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(Añadir, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(Modificar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(Borrar, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(Modificar)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(EscogerFila, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -137,17 +162,21 @@ public class Formulario extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Album, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Artista, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Cancion, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(44, 44, 44)
-                .addComponent(Modificar)
+                .addGap(18, 18, 18)
+                .addComponent(EscogerFila, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 110, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(Añadir, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Borrar, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Modificar, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(errores, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -155,58 +184,50 @@ public class Formulario extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void CancionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancionActionPerformed
-        RellenarTabla1(Cancion.getText());
+    private void EscogerFilaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EscogerFilaActionPerformed
+        EscogeFila();
         
-        RellenarTabla2(Cancion.getText());
-    }//GEN-LAST:event_CancionActionPerformed
-
-    private void AlbumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AlbumActionPerformed
-        RellenarTabla1(Album.getText());
-        
-        RellenarTabla2(Album.getText());
-    }//GEN-LAST:event_AlbumActionPerformed
-
-    private void ArtistaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ArtistaActionPerformed
-        RellenarTabla1(Artista.getText());
-        
-        RellenarTabla2(Artista.getText());    
-    }//GEN-LAST:event_ArtistaActionPerformed
-
-    private void ModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ModificarActionPerformed
-       /*
-   Aquí viene la parte interesante:
-   Lee cada fila seleccionada de la tabla de origen 
-   y agrégalo a la tabla de destino
- */
- DefaultTableModel modeloOrigen = (DefaultTableModel) tabla.getModel(),
-                   modeloDestino = (DefaultTableModel) tabla2.getModel();
- /* Si utilizas otro TableModel, el tipo de estas variables debe ser el mismo 
-    que el TableModel que utilizas.
-  */
- // Si tienes filas seleccionadas en la tabla de origen:
- if(tabla.getSelectedRowCount() > 0) {
-     // 1) Obtén los índices de las filas seleccionadas.
-     int[] indices = tabla.getSelectedRows();
-     // 2) Para cada fila, crea un Array para guardar los valores... 
-     for(int i : indices) {
-         Object[] fila = new Object[modeloOrigen.getColumnCount()];
-         // ... y guarda los valores de la fila de origen.
-         for(int j = 0; j < fila.length; j++) {
-             fila[j] = modeloOrigen.getValueAt(i, j);
-         }
-         // 3) Agrega la fila al TableModel de la tabla de destino
-         modeloDestino.addRow(fila);
-     }
- }
-                
-        
-       
-    }//GEN-LAST:event_ModificarActionPerformed
+        Añadir.setEnabled(true);
+        Borrar.setEnabled(true);
+        Modificar.setEnabled(true);
+        tabla2.setEnabled(true);
+    }//GEN-LAST:event_EscogerFilaActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         gc.CerrarConexion();
     }//GEN-LAST:event_formWindowClosing
+
+    private void AñadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AñadirActionPerformed
+        
+        gc.insertarDatos(jComboBox1.getSelectedItem().toString(), tabla2.getValueAt(0, 0).toString(), tabla2.getValueAt(0, 1).toString(), tabla2.getValueAt(0, 2).toString(), tabla2.getValueAt(0, 3).toString(), tabla2.getValueAt(0, 4).toString());
+        RellenarTabla1(jComboBox1.getSelectedItem().toString());
+        RellenarTabla2(jComboBox1.getSelectedItem().toString());
+        
+    }//GEN-LAST:event_AñadirActionPerformed
+
+    private void ModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ModificarActionPerformed
+        gc.ModificarDatos(jComboBox1.getSelectedItem().toString()
+                        , tabla2.getValueAt(0, 0).toString(), tabla2.getValueAt(0, 1).toString()
+                        , tabla2.getValueAt(0, 2).toString(), tabla2.getValueAt(0, 3).toString()
+                        , tabla2.getValueAt(0, 4).toString()
+                        , tabla2.getColumnName(0), tabla2.getColumnName(1), tabla2.getColumnName(2)
+                        , tabla2.getColumnName(3), tabla2.getColumnName(4));
+        
+        RellenarTabla1(jComboBox1.getSelectedItem().toString());
+        RellenarTabla2(jComboBox1.getSelectedItem().toString());
+    }//GEN-LAST:event_ModificarActionPerformed
+
+    private void BorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BorrarActionPerformed
+        gc.dropColumna(jComboBox1.getSelectedItem().toString(), tabla2.getValueAt(0, 0).toString());
+        RellenarTabla1(jComboBox1.getSelectedItem().toString());
+        RellenarTabla2(jComboBox1.getSelectedItem().toString());
+    }//GEN-LAST:event_BorrarActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        RellenarTabla1(jComboBox1.getSelectedItem().toString());
+        
+        RellenarTabla2(jComboBox1.getSelectedItem().toString());
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -251,6 +272,8 @@ public class Formulario extends javax.swing.JFrame {
             
             sta.close();
             
+            
+            
         } catch (Exception e) {
             e.printStackTrace();
             cadena_error = e.toString();
@@ -281,11 +304,11 @@ public class Formulario extends javax.swing.JFrame {
                 modelo.addColumn(metaDatos.getColumnLabel(i));
             }
             
-            if (rs.absolute(tabla.getSelectedRowCount())) {                
+            if (rs.next()) {                
                 Object[] fila = new Object[numColumnas];
                 
                 for (int i = 0; i < numColumnas; i++) {
-                    fila [i] = rs.getObject(i +1);
+                    fila [3] = rs.getObject(4);
                 }
                 modelo.addRow(fila);
             }
@@ -317,47 +340,28 @@ public class Formulario extends javax.swing.JFrame {
         }
     }
     
-     public void RellenarTabla(String nombre){
+    public void EscogeFila(){
+    
+    DefaultTableModel modeloOrigen = (DefaultTableModel) tabla.getModel(),
+                      modeloDestino = (DefaultTableModel) tabla2.getModel();
+    
+        if(tabla.getSelectedRowCount() > 0) {
         
-        try {
-            gc.conn1.setAutoCommit(false);
-            
-            Statement sta = gc.conn1.createStatement();
-            
-            String query = "SELECT * FROM "+ nombre +"";
-            
-            ResultSet rs = sta.executeQuery(query);           
-            ResultSetMetaData metaDatos = rs.getMetaData();
-            
-            int numColumnas = metaDatos.getColumnCount();
-            
-            modelo = new DefaultTableModel();
-            
-            this.tabla.setModel(modelo);
-            
-            for (int i = 1; i <= numColumnas; i++) {
-                modelo.addColumn(metaDatos.getColumnLabel(i));
-            }
-            
-            while (rs.next()) {                
-                Object[] fila = new Object[numColumnas];
-                
-                for (int i = 0; i < numColumnas; i++) {
-                    fila [i] = rs.getObject(i +1);
+            int[] indices = tabla.getSelectedRows();
+        
+            for(int i : indices) {
+                Object[] fila = new Object[modeloOrigen.getColumnCount()];
+        
+                for(int j = 0; j < fila.length; j++) {
+                    fila[j] = modeloOrigen.getValueAt(i, j);
                 }
-                modelo.addRow(fila);
+        
+         
+                modeloDestino.addRow(fila);
+                if(modeloDestino.getRowCount() == 2){
+                    modeloDestino.removeRow(0);
+                }        
             }
-            cadena_error = "Conectado a spotify";
-            errores.setText(cadena_error);
-            
-            rs.close();
-            
-            sta.close();
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            cadena_error = e.toString();
-            errores.setText(cadena_error);
         }
     }
     
@@ -394,11 +398,13 @@ public class Formulario extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Album;
-    private javax.swing.JButton Artista;
-    private javax.swing.JButton Cancion;
+    private javax.swing.JButton Añadir;
+    private javax.swing.JButton Borrar;
+    private javax.swing.JButton EscogerFila;
     private javax.swing.JButton Modificar;
     private javax.swing.JLabel errores;
+    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tabla;

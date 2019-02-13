@@ -47,34 +47,6 @@ public class GestorConexion {
         }
     }   
     
-    public void addColumna(String nombre){
-        try {
-            conn1.setAutoCommit(false);
-            
-            Statement sta = conn1.createStatement();
-        
-            sta.executeUpdate("ALTER TABLE album ADD "+ nombre +" VARCHAR(30)");
-
-            sta.close();
-            
-            conn1.commit();
-            
-           System.out.println("has añadido una columna");
-        } catch (Exception e) {
-            System.out.println("Error");
-            try {
-                    if(conn1 != null){
-                        conn1.rollback();
-                    }
-                } catch (Exception se2) {
-                    se2.printStackTrace();
-                    cadena_error = se2.toString();
-                }
-             e.printStackTrace();
-             cadena_error = e.toString();
-        }  
-    }
-    
     public void CerrarConexion(){
         try {
             conn1.close();
@@ -86,14 +58,15 @@ public class GestorConexion {
         }
     }
     
-    public void insertarDatosCancion(String id,String noombre, String duracioon, String letrass, String Id_Albuum){
+    
+    public void insertarDatos(String tabla, String Id, String nombre, String numero_canciones, String Anno_lanzamiento, String Id_artista){
         try {
             conn1.setAutoCommit(false);
             
             Statement sta = conn1.createStatement();
 
-            sta.executeUpdate("INSERT INTO cancion VALUES('"+ id +"', '"+ noombre +"', '"+ duracioon +"', '"+ letrass +"', '"+ Id_Albuum +"')");
-
+            sta.executeUpdate("INSERT INTO "+ tabla +" VALUES('"+ Id +"', '"+ nombre +"', '"+ numero_canciones +"', '"+ Anno_lanzamiento +"', '"+ Id_artista +"')");
+            
             System.out.println("insertado guay");
             
             sta.close();
@@ -110,18 +83,46 @@ public class GestorConexion {
                 se2.printStackTrace();
                 cadena_error = se2.toString();
             }
-               
             e.printStackTrace();
             cadena_error = e.toString();
         }
     }
-    public void insertarDatosAlbum(String idAlbum,String noombreAlbum, String AnoPublicacion){
+    
+     public void dropColumna(String tabla, String Id){
+        try {
+            conn1.setAutoCommit(false);
+            
+            Statement sta = conn1.createStatement();
+        
+            sta.executeUpdate("DELETE FROM "+ tabla +" where Id = '"+ Id +"' ");
+            
+            sta.close();
+            
+            conn1.commit();
+            
+            System.out.println("has dropeado la fila correctamente");
+        } catch (Exception e) {
+               System.out.println("Error");
+               
+               try {
+                    if(conn1 != null){
+                        conn1.rollback();
+                    }
+                } catch (Exception se2) {
+                    se2.printStackTrace();
+                }
+               
+                e.printStackTrace();
+        }
+    }
+    
+     public void ModificarDatos(String tabla, String Id, String nombre, String numero_canciones, String Anno_lanzamiento, String dat5, String Column1, String Column2, String Column3, String Column4, String Column5){
         try {
             conn1.setAutoCommit(false);
             
             Statement sta = conn1.createStatement();
 
-            sta.executeUpdate("INSERT INTO album VALUES('"+ idAlbum +"', '"+ noombreAlbum +"', '"+ AnoPublicacion +"')");
+            sta.executeUpdate("UPDATE "+ tabla +" SET "+Column1+ "='"+ Id +"', "+Column2+ " = '"+ nombre +"',"+Column3+ " = '"+ numero_canciones +"',"+Column4+ " = '"+ Anno_lanzamiento +"',"+Column5+ " = '"+ dat5 +"' WHERE  Id = '"+ Id +"'");
             
             System.out.println("insertado guay");
             
