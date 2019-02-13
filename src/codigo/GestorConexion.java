@@ -37,7 +37,7 @@ public class GestorConexion {
             
             if (conn1 != null) {
                 System.out.println("Conectado a spotify…");
-                
+                cadena_error = "Conectado a spotify…";
             } 
             
         } catch (SQLException ex) {
@@ -72,6 +72,8 @@ public class GestorConexion {
             sta.close();
             
             conn1.commit();
+            
+            cadena_error = "Datos insertados correctamente";
         } catch (Exception e) {
             System.out.println("Error");
                
@@ -100,7 +102,7 @@ public class GestorConexion {
             
             conn1.commit();
             
-            System.out.println("has dropeado la fila correctamente");
+            cadena_error = ("Has borrado la fila correctamente");
         } catch (Exception e) {
                System.out.println("Error");
                
@@ -110,9 +112,11 @@ public class GestorConexion {
                     }
                 } catch (Exception se2) {
                     se2.printStackTrace();
+                    cadena_error = se2.toString();
                 }
                
                 e.printStackTrace();
+                cadena_error = e.toString();
         }
     }
     
@@ -124,11 +128,11 @@ public class GestorConexion {
 
             sta.executeUpdate("UPDATE "+ tabla +" SET "+Column1+ "='"+ Id +"', "+Column2+ " = '"+ nombre +"',"+Column3+ " = '"+ numero_canciones +"',"+Column4+ " = '"+ Anno_lanzamiento +"',"+Column5+ " = '"+ dat5 +"' WHERE  Id = '"+ Id +"'");
             
-            System.out.println("insertado guay");
-            
             sta.close();
             
             conn1.commit();
+            
+            cadena_error = "Modificado correctamente";
         } catch (Exception e) {
             System.out.println("Error");
                

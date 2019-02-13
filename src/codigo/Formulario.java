@@ -92,7 +92,6 @@ public class Formulario extends javax.swing.JFrame {
             }
         ));
         tabla2.setCellSelectionEnabled(true);
-        tabla2.setEnabled(false);
         jScrollPane2.setViewportView(tabla2);
 
         EscogerFila.setText("Escoger fila");
@@ -132,7 +131,7 @@ public class Formulario extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("jLabel1");
+        jLabel1.setText("RECUERDE CLICKAR FUERA DE LA TABLA AL TERMINA DE MODIFICAR EL ULTIMO DE SUS VALORES");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -141,6 +140,7 @@ public class Formulario extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(errores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 732, Short.MAX_VALUE)
                     .addComponent(jScrollPane1)
@@ -153,7 +153,6 @@ public class Formulario extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(EscogerFila, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -187,10 +186,10 @@ public class Formulario extends javax.swing.JFrame {
     private void EscogerFilaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EscogerFilaActionPerformed
         EscogeFila();
         
-        Añadir.setEnabled(true);
         Borrar.setEnabled(true);
         Modificar.setEnabled(true);
-        tabla2.setEnabled(true);
+        
+        errores.setText("Fila escogida correctamente");
     }//GEN-LAST:event_EscogerFilaActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -202,6 +201,8 @@ public class Formulario extends javax.swing.JFrame {
         gc.insertarDatos(jComboBox1.getSelectedItem().toString(), tabla2.getValueAt(0, 0).toString(), tabla2.getValueAt(0, 1).toString(), tabla2.getValueAt(0, 2).toString(), tabla2.getValueAt(0, 3).toString(), tabla2.getValueAt(0, 4).toString());
         RellenarTabla1(jComboBox1.getSelectedItem().toString());
         RellenarTabla2(jComboBox1.getSelectedItem().toString());
+        
+        errores.setText(gc.cadena_error);
         
     }//GEN-LAST:event_AñadirActionPerformed
 
@@ -215,18 +216,24 @@ public class Formulario extends javax.swing.JFrame {
         
         RellenarTabla1(jComboBox1.getSelectedItem().toString());
         RellenarTabla2(jComboBox1.getSelectedItem().toString());
+        
+        errores.setText(gc.cadena_error);
     }//GEN-LAST:event_ModificarActionPerformed
 
     private void BorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BorrarActionPerformed
         gc.dropColumna(jComboBox1.getSelectedItem().toString(), tabla2.getValueAt(0, 0).toString());
         RellenarTabla1(jComboBox1.getSelectedItem().toString());
         RellenarTabla2(jComboBox1.getSelectedItem().toString());
+        
+        errores.setText(gc.cadena_error);
     }//GEN-LAST:event_BorrarActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         RellenarTabla1(jComboBox1.getSelectedItem().toString());
         
         RellenarTabla2(jComboBox1.getSelectedItem().toString());
+        
+        errores.setText(gc.cadena_error);
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     /**
