@@ -24,6 +24,10 @@ public class Formulario extends javax.swing.JFrame {
     
     String cadena_error = "";
     DefaultTableModel modelo;
+    
+    DefaultTableModel modelo2;
+    
+    DefaultTableModel modelo3;
 
     DefaultTableModel tm ;
     
@@ -35,6 +39,10 @@ public class Formulario extends javax.swing.JFrame {
         RellenarTabla1(jComboBox1.getSelectedItem().toString());
         
         RellenarTabla2(jComboBox1.getSelectedItem().toString());
+        
+          if(jComboBox1.isVisible()){
+            jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { tabla2.getColumnName(0) ,tabla2.getColumnName(1) ,tabla2.getColumnName(2) ,tabla2.getColumnName(3) ,tabla2.getColumnName(4)}));
+        }
         
         
         
@@ -60,13 +68,10 @@ public class Formulario extends javax.swing.JFrame {
         Modificar = new javax.swing.JButton();
         jComboBox1 = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
+        jComboBox2 = new javax.swing.JComboBox<>();
+        textoBusqueda = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-        });
 
         tabla = new javax.swing.JTable(){
             public boolean isCellEditable(int rowIndex, int colIndex) {
@@ -131,7 +136,20 @@ public class Formulario extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("RECUERDE CLICKAR FUERA DE LA TABLA AL TERMINA DE MODIFICAR EL ULTIMO DE SUS VALORES");
+        jLabel1.setText("RECUERDE CLICKAR EN CUALQUIER COLUMNA DE LA TABLA AL TERMINA DE MODIFICAR EL ULTIMO DE SUS VALORES");
+
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { }));
+
+        textoBusqueda.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                textoBusquedaMouseClicked(evt);
+            }
+        });
+        textoBusqueda.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                textoBusquedaKeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -153,15 +171,22 @@ public class Formulario extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(EscogerFila, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(18, 18, 18)
+                        .addComponent(textoBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                    .addComponent(textoBusqueda)
+                    .addComponent(jComboBox2))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -191,10 +216,6 @@ public class Formulario extends javax.swing.JFrame {
         
         errores.setText("Fila escogida correctamente");
     }//GEN-LAST:event_EscogerFilaActionPerformed
-
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        gc.CerrarConexion();
-    }//GEN-LAST:event_formWindowClosing
 
     private void AñadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AñadirActionPerformed
         
@@ -233,8 +254,21 @@ public class Formulario extends javax.swing.JFrame {
         
         RellenarTabla2(jComboBox1.getSelectedItem().toString());
         
+          if(jComboBox1.isVisible()){
+            jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { tabla2.getColumnName(0) ,tabla2.getColumnName(1) ,tabla2.getColumnName(2) ,tabla2.getColumnName(3) ,tabla2.getColumnName(4)}));
+        }
+        
         errores.setText(gc.cadena_error);
     }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void textoBusquedaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textoBusquedaMouseClicked
+        textoBusqueda.setText("");
+    }//GEN-LAST:event_textoBusquedaMouseClicked
+
+    private void textoBusquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textoBusquedaKeyReleased
+        consultaStatement(jComboBox1.getSelectedItem().toString(), jComboBox2.getSelectedItem().toString(), textoBusqueda.getText());
+        errores.setText("Busqueda mostrada correctamente");
+    }//GEN-LAST:event_textoBusquedaKeyReleased
 
     /**
      * @param args the command line arguments
@@ -279,7 +313,7 @@ public class Formulario extends javax.swing.JFrame {
             
             sta.close();
             
-            
+          
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -287,6 +321,62 @@ public class Formulario extends javax.swing.JFrame {
             errores.setText(cadena_error);
         }
     }
+    
+    public void consultaStatement(String nombreTabla, String nombreColumna, String dato){
+        try {
+            gc.conn1.setAutoCommit(false);
+            
+            Statement sta = gc.conn1.createStatement();
+        
+            String query = "SELECT * FROM "+nombreTabla+" WHERE "+nombreColumna+" like '%"+dato+"%'";
+            ResultSet rs = sta.executeQuery(query);
+            ResultSetMetaData metaDatos = rs.getMetaData();
+            
+            int numColumnas = metaDatos.getColumnCount();
+            
+            modelo3 = new DefaultTableModel();
+            
+            this.tabla.setModel(modelo3);
+            
+            for (int i = 1; i <= numColumnas; i++) {
+                modelo3.addColumn(metaDatos.getColumnLabel(i));
+            }
+            
+            
+            while (rs.next()) {                
+                Object[] fila = new Object[numColumnas];
+                
+                for (int i = 0; i < numColumnas; i++) {
+                    fila [i] = rs.getObject(i +1);
+                }
+                                
+                modelo3.addRow(fila);
+                
+               
+            }
+            
+            
+            rs.close();
+            
+            sta.close();
+            gc.conn1.commit();
+            System.out.println("Consultado Correctamente");
+            cadena_error = "Consultado Correctamente";
+        } catch (Exception e) {
+               System.out.println("Error");
+               try {
+                    if(gc.conn1 != null){
+                        gc.conn1.rollback();
+                    }
+                } catch (Exception se2) {
+                    se2.printStackTrace();
+                    cadena_error = se2.toString();
+                }
+               e.printStackTrace();
+               cadena_error = e.toString();
+        }
+    }
+    
     
     public void  RellenarTabla2(String nombre){
         
@@ -303,12 +393,12 @@ public class Formulario extends javax.swing.JFrame {
             int numColumnas = metaDatos.getColumnCount();
             int numFilas = 1;
             
-            modelo = new DefaultTableModel();
+            modelo2 = new DefaultTableModel();
             
-            this.tabla2.setModel(modelo);
+            this.tabla2.setModel(modelo2);
             
             for (int i = 1; i <= numColumnas; i++) {
-                modelo.addColumn(metaDatos.getColumnLabel(i));
+                modelo2.addColumn(metaDatos.getColumnLabel(i));
             }
             
             if (rs.next()) {                
@@ -317,7 +407,9 @@ public class Formulario extends javax.swing.JFrame {
                 for (int i = 0; i < numColumnas; i++) {
                     fila [3] = rs.getObject(4);
                 }
-                modelo.addRow(fila);
+                modelo2.addRow(fila);
+                
+                
             }
             
             
@@ -411,10 +503,12 @@ public class Formulario extends javax.swing.JFrame {
     private javax.swing.JButton Modificar;
     private javax.swing.JLabel errores;
     private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tabla;
     private javax.swing.JTable tabla2;
+    private javax.swing.JTextField textoBusqueda;
     // End of variables declaration//GEN-END:variables
 }

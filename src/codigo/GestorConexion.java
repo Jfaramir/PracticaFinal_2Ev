@@ -148,4 +148,7 @@ public class GestorConexion {
             cadena_error = e.toString();
         }
     }
+     
+     
+     
 }
