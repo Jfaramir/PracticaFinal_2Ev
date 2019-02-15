@@ -5,10 +5,8 @@
  */
 package codigo;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
 
@@ -36,13 +34,13 @@ public class Formulario extends javax.swing.JFrame {
     public Formulario() {
         initComponents();
         
-        RellenarTabla1(jComboBox1.getSelectedItem().toString());
+        RellenarTabla1(jComboBox1.getSelectedItem().toString());//rellena la tabla1
         
-        RellenarTabla2(jComboBox1.getSelectedItem().toString());
+        RellenarTabla2(jComboBox1.getSelectedItem().toString());//rellena la tabla2
         
           if(jComboBox1.isVisible()){
             jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { tabla2.getColumnName(0) ,tabla2.getColumnName(1) ,tabla2.getColumnName(2) ,tabla2.getColumnName(3) ,tabla2.getColumnName(4)}));
-        }
+        }//metemos los datos en el combo box
         
         
         
@@ -72,6 +70,11 @@ public class Formulario extends javax.swing.JFrame {
         textoBusqueda = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         tabla = new javax.swing.JTable(){
             public boolean isCellEditable(int rowIndex, int colIndex) {
@@ -219,8 +222,12 @@ public class Formulario extends javax.swing.JFrame {
 
     private void AñadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AñadirActionPerformed
         
-        gc.insertarDatos(jComboBox1.getSelectedItem().toString(), tabla2.getValueAt(0, 0).toString(), tabla2.getValueAt(0, 1).toString(), tabla2.getValueAt(0, 2).toString(), tabla2.getValueAt(0, 3).toString(), tabla2.getValueAt(0, 4).toString());
+        gc.insertarDatos(jComboBox1.getSelectedItem().toString(), tabla2.getValueAt(0, 0).toString()
+                       , tabla2.getValueAt(0, 1).toString(), tabla2.getValueAt(0, 2).toString()
+                       , tabla2.getValueAt(0, 3).toString(), tabla2.getValueAt(0, 4).toString());
+        
         RellenarTabla1(jComboBox1.getSelectedItem().toString());
+        
         RellenarTabla2(jComboBox1.getSelectedItem().toString());
         
         errores.setText(gc.cadena_error);
@@ -232,8 +239,9 @@ public class Formulario extends javax.swing.JFrame {
                         , tabla2.getValueAt(0, 0).toString(), tabla2.getValueAt(0, 1).toString()
                         , tabla2.getValueAt(0, 2).toString(), tabla2.getValueAt(0, 3).toString()
                         , tabla2.getValueAt(0, 4).toString()
-                        , tabla2.getColumnName(0), tabla2.getColumnName(1), tabla2.getColumnName(2)
-                        , tabla2.getColumnName(3), tabla2.getColumnName(4));
+                        , tabla2.getColumnName(0), tabla2.getColumnName(1)
+                        , tabla2.getColumnName(2), tabla2.getColumnName(3)
+                        , tabla2.getColumnName(4));
         
         RellenarTabla1(jComboBox1.getSelectedItem().toString());
         RellenarTabla2(jComboBox1.getSelectedItem().toString());
@@ -255,7 +263,10 @@ public class Formulario extends javax.swing.JFrame {
         RellenarTabla2(jComboBox1.getSelectedItem().toString());
         
           if(jComboBox1.isVisible()){
-            jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { tabla2.getColumnName(0) ,tabla2.getColumnName(1) ,tabla2.getColumnName(2) ,tabla2.getColumnName(3) ,tabla2.getColumnName(4)}));
+            jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { 
+                                tabla2.getColumnName(0) ,tabla2.getColumnName(1) 
+                               ,tabla2.getColumnName(2) ,tabla2.getColumnName(3) 
+                               ,tabla2.getColumnName(4)}));
         }
         
         errores.setText(gc.cadena_error);
@@ -266,9 +277,16 @@ public class Formulario extends javax.swing.JFrame {
     }//GEN-LAST:event_textoBusquedaMouseClicked
 
     private void textoBusquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textoBusquedaKeyReleased
-        consultaStatement(jComboBox1.getSelectedItem().toString(), jComboBox2.getSelectedItem().toString(), textoBusqueda.getText());
+        consultaStatement(jComboBox1.getSelectedItem().toString()
+                        , jComboBox2.getSelectedItem().toString()
+                        , textoBusqueda.getText());
+        
         errores.setText("Busqueda mostrada correctamente");
     }//GEN-LAST:event_textoBusquedaKeyReleased
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        gc.CerrarConexion();
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
